@@ -1,0 +1,6 @@
+pandas
+pathlib
+datasets
+hashlib
+scikit-learn
+numpy
