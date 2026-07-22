@@ -1,9 +1,9 @@
 # Catch_Fraud - Fraud Intelligence Platform
-![PyPI - Version](https://img.shields.io/badge/Python-3.12.10-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) 
+
+![PyPI - Version](https://img.shields.io/badge/Python-3.12.10-blue.svg) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Git Commits](https://img.shields.io/github/commit-activity/t/surabhi1914/Catch_Fraud?logo=git&logoColor=black&label=Commits)
 
-
-An AML / fraud detection project built step by step using the dataset `HI-Small_Trans.csv`(IBM HuggingFace).
+An AML / fraud detection project built step by step using the dataset `AMLSim-HI-Small.parquet`(IBM HuggingFace).
 
 ## Project Goal
 
@@ -13,13 +13,11 @@ This project aims to build a transaction-level fraud / AML detection pipeline th
 - Why was it flagged?
 - What should an analyst check next?
 
-> Note: The workflow is intentionally incremental so that each step is understandable, reusable, and easy to validate before moving on.
-
 ---
 
 ## Dataset
 
-**Source dataset:** `HI-Small_Trans.csv`  
+**Source dataset:** `AMLSim-HI-Small.parquet`  
 **Dataset type:** Synthetic AML transaction data
 
 The raw dataset includes transaction-level fields such as:
@@ -38,12 +36,14 @@ The raw dataset includes transaction-level fields such as:
 
 In the pipeline, these columns are standardized into a cleaner canonical schema for downstream processing.
 
-> Note: raw data files and generated parquet outputs are not tracked in Git.
+> Note: raw data files and generated parquet outputs are not tracked in Git. You can use the file src\data\fetch_data.py to get the raw parquet file
+
 ---
 
 ## Current Progress
 
 ### Completed
+
 - Project setup
 - Validation notebook
 - Raw schema inspection
@@ -55,10 +55,13 @@ In the pipeline, these columns are standardized into a cleaner canonical schema 
 - Validated parquet output creation
 - Chronological train / validation / test split
 - Split-level class distribution checks
+
 ---
 
 ## Next step
+
 The next stage is to build the first baseline model using a minimal feature set, such as:
+
 - amount fields
 - currencies
 - payment format
@@ -70,6 +73,7 @@ The first model will be intentionally simple and interpretable before moving on 
 ---
 
 ## Structure
+
 - notebooks/ → step-by-step learning notebooks
 - src/ → reusable Python code as the project matures
 - data/raw/ → raw input dataset (not tracked in git)
@@ -85,7 +89,9 @@ The first model will be intentionally simple and interpretable before moving on 
   Loads the validated dataset, sorts transactions chronologically, creates time-aware train / validation / test splits, and saves processed parquet files.
 
 ---
+
 ## Key observations so far
+
 - Raw dataset shape: **5,078,345 rows × 11 columns**
 - Target label is highly imbalanced:
   - `0`: 5,073,168
@@ -103,24 +109,28 @@ Catch_Fraud/
 ├── data/
 │   ├── raw/
 │   │   └── dev/
+│   │   └── AMLSim-HI-Small.parquet
 │   ├── interim/
 │   └── processed/
 ├── notebooks/
+│   ├── 00_project_setup.ipynb
 │   ├── 01_validate_data.ipynb
-│   └── 02_split_data.ipynb
+│   ├── 02_split_data.ipynb
+│   └── 03_baseline_model.ipynb
 ├── src/
-│   └── data/
+│   └── fetch_data.py
 ├── .gitignore
 └── README.md
+└── requirements.txt
 ```
+
 ---
 
 ## Outputs Created So Far
+
 - **Validation stage**
   - data/interim/transactions_validated.parquet
-- **Split stage** 
+- **Split stage**
   - data/processed/train.parquet
   - data/processed/val.parquet
   - data/processed/test.parquet
-
-
