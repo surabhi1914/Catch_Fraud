@@ -82,13 +82,25 @@ The first model will be intentionally simple and interpretable before moving on 
 
 ### Current Notebooks
 
+- `notebooks/00_project_setup.ipynb`  
+  basic inspect of the parquet raw file just to validate the project setup completion
+
 - `notebooks/01_validate_data.ipynb`  
   Loads the raw dataset, validates schema and types, inspects missingness, creates a stable transaction ID, and saves a validated parquet file.
 
 - `notebooks/02_split_data.ipynb`  
   Loads the validated dataset, sorts transactions chronologically, creates time-aware train / validation / test splits, and saves processed parquet files.
 
+- `notebooks/03_baseline_model.ipynb`  
+  _needs to be updated_
+
 ---
+
+### Helper Files:
+
+- `src/fetch_data.py`
+  Helps in downloading the dataset as parquet via huggingface using python dataset library.
+  dataset name = "bbfizp/AMLSim-HI-Small"
 
 ## Key observations so far
 
@@ -99,6 +111,8 @@ The first model will be intentionally simple and interpretable before moving on 
 - The time-based split revealed a higher positive rate in the later test window, suggesting temporal distribution shift.
 
 **Why the Split Matters? ** Instead of using a random split, this project uses a chronological split so that earlier transactions are used for training and later transactions are used for validation and testing. This is important because fraud / AML detection is time-sensitive, and random splitting can hide temporal drift or create unrealistic evaluation conditions.
+
+# Validation result after the baseline execution - _needs to be updated_
 
 ---
 
@@ -126,7 +140,7 @@ Catch_Fraud/
 
 ---
 
-## Outputs Created So Far
+## Outputs Created So Far - _needs to be edited_
 
 - **Validation stage**
   - data/interim/transactions_validated.parquet
