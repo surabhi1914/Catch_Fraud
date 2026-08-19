@@ -17,15 +17,7 @@ def load_split(path: Path) -> pd.DataFrame:
 
     columns = [TIMESTAMP_COL, TARGET_COL]
 
-    if path.suffix.lower() == ".parquet":
-        return pd.read_parquet(path, columns=columns)
-
-    if path.suffix.lower() == ".csv":
-        return pd.read_csv(path, usecols=columns)
-
-    raise ValueError(
-        f"Unsupported file type: {path.suffix}. Expected .csv or .parquet."
-    )
+    return pd.read_parquet(path, columns=columns)
 
 
 def summarize_period(
@@ -52,14 +44,8 @@ def summarize_period(
     }
 
 
-def main(train_path: Path, validation_path: Path) -> None:
-    train_df = load_split(train_path)
-    validation_df = load_split(validation_path)
-
-    dev_df = pd.concat(
-        [train_df, validation_df],
-        ignore_index=True,
-    )
+def main(train_path: Path) -> None:
+    dev_df = load_split(train_path)
 
     # Parse timestamp safely.
     dev_df[TIMESTAMP_COL] = pd.to_datetime(
@@ -75,18 +61,19 @@ def main(train_path: Path, validation_path: Path) -> None:
 
     unique_targets = set(dev_df[TARGET_COL].unique())
 
+    # safe error handling choice
     if not unique_targets.issubset({0, 1}):
         raise ValueError(
             f"{TARGET_COL} must contain only 0/1. Found: {sorted(unique_targets)}"
         )
 
-    # Critical leakage guard:
-    # this script must never contain Sept 8+ rows.
+    # Critical leakage guard check - this script must never contain Sept 8+ rows.
     if (dev_df[TIMESTAMP_COL] >= TEST_START).any():
         raise ValueError(
             "September 8+ data detected. The final test set must remain untouched."
         )
 
+    # a check to make sure there is no record before sept 1
     if (dev_df[TIMESTAMP_COL] < DEV_START).any():
         raise ValueError("Rows before September 1 were detected.")
 
@@ -223,16 +210,6 @@ if __name__ == "__main__":
         help="Existing September 1-5 training split.",
     )
 
-    parser.add_argument(
-        "--validation",
-        type=Path,
-        required=True,
-        help="Existing September 6-7 validation split.",
-    )
-
     args = parser.parse_args()
 
-    main(
-        train_path=args.train,
-        validation_path=args.validation,
-    )
+    main(train_path=args.train)
