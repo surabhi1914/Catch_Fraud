@@ -1,0 +1,19 @@
+{
+    "model_id": "V4-T2-B-02",
+    "feature_version": "V3-E1",
+    "selection_stage": "V4-T2",
+    "selection_reason": "Strong PR-AUC improvement with improved temporal stability and lower false-positive/alert burden than the PR-AUC-maximizing candidate.",
+    "hyperparameters": {
+        "num_leaves": 63,
+        "max_depth": 10,
+        "min_child_samples": 500,
+        "learning_rate": 0.03,
+        "n_estimators": 500,
+        "reg_alpha": 0.1,
+        "reg_lambda": 2.0,
+        "subsample": 0.9,
+        "colsample_bytree": 0.75
+    },
+    "threshold_selected": false,
+    "test_set_evaluated": false
+}

@@ -239,3 +239,59 @@ def summarize_temporal_stability(
     }
 
     return pd.DataFrame([summary])
+
+
+def summarize_candidate_results(
+    candidate_id,
+    fold_results,
+    candidate_params,
+):
+    """
+    Collapse three chronological fold results
+    into one candidate-level summary.
+    """
+
+    summary = {
+        "candidate_id": candidate_id,
+        # Primary metric
+        "mean_ap": fold_results["average_precision"].mean(),
+        "std_ap": fold_results["average_precision"].std(),
+        "min_ap": fold_results["average_precision"].min(),
+        "max_ap": fold_results["average_precision"].max(),
+        "ap_range": (
+            fold_results["average_precision"].max()
+            - fold_results["average_precision"].min()
+        ),
+        # Keep individual folds visible
+        "fold1_ap": fold_results.loc[
+            fold_results["fold"] == 1,
+            "average_precision",
+        ].iloc[0],
+        "fold2_ap": fold_results.loc[
+            fold_results["fold"] == 2,
+            "average_precision",
+        ].iloc[0],
+        "fold3_ap": fold_results.loc[
+            fold_results["fold"] == 3,
+            "average_precision",
+        ].iloc[0],
+        # Secondary ranking metric
+        "mean_roc_auc": fold_results["roc_auc"].mean(),
+        # Operational metrics
+        "mean_precision_at_80_recall": fold_results["precision_at_recall_floor"].mean(),
+        "mean_false_positives": fold_results["false_positives_at_recall_floor"].mean(),
+        "mean_alert_rate": fold_results["alert_rate_at_recall_floor"].mean(),
+        # Computational cost
+        "total_fit_seconds": fold_results["fit_seconds"].sum(),
+    }
+
+    # Also record the actual hyperparameters.
+    for parameter_name, value in candidate_params.items():
+        clean_name = parameter_name.replace(
+            "model__",
+            "",
+        )
+
+        summary[clean_name] = value
+
+    return summary
